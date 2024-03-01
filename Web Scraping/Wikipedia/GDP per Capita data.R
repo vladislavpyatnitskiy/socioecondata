@@ -8,22 +8,27 @@ gdp.capita.df <- function(x){ # Get countries according to GDP per Capita
   
   y <- tab %>% html_nodes('tr') %>% html_nodes('td') %>% html_text()
   
-  v <- NULL # Create lists to contain variables & Subset excess row
+  v <- NULL # Create lists to contain variables 
   
-  l <- c("Europe", "Americas", "Africa", "Oceania", "Asia")
+  l <- c("Europe", "Americas", "Africa", "Oceania", "Asia") # Regions
   
   for (n in 1:length(y)){ # Sort data by Country, Region and GDP per Capita
     
    if (any(l == y[n])){ if (isTRUE(y[n+1] == "—") && isFALSE(y[n+2] == "—")){
      
-     v <- rbind(v, cbind(y[n-1], y[n], y[n+2])) } else {
+     d <- as.numeric(gsub(",", "", y[n + 2])) # Join data 
+     
+     v <- rbind.data.frame(v, data.frame(y[n - 1], y[n], d))
+     
+   } else { d <- as.numeric(gsub(",", "", y[n + 1])) # Join data 
        
-       v <- rbind(v, cbind(y[n-1], y[n], y[n+1])) } } }
+    v <- rbind.data.frame(v, data.frame(y[n - 1], y[n], d)) } } }
   
   colnames(v) <- c("Country", "Region", "GDP per Capita") # Column names
   rownames(v) <- seq(nrow(v)) 
   
   v <- v[apply(v, 1, function(row) all(row != "—")),] # Remove zeros & NA
+  v <- v[apply(v, 1, function(x) all(!is.na(x))),] # Get rid of NA
   
   v # Display
 }
