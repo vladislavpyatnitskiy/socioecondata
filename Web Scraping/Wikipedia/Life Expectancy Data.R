@@ -10,7 +10,9 @@ life.expectancy.df <- function(x){ # Data Frame of Countries & life expectancy
   
   v <- NULL # Form a Data Frame
   
-  for (n in 0:(length(y)/16)){ v <- rbind(v, cbind(y[1+n*16], y[2+n*16])) }
+  for (n in 0:(length(y) / 16)){ # Country and Life Expectancy Data
+    
+    v <- rbind(v, data.frame(y[1 + n * 16], as.numeric(y[2 + n * 16]))) }
   
   colnames(v) <- c("Country", "Life Expectancy") # Column Names
   rownames(v) <- seq(nrow(v)) # Numbers as row names
