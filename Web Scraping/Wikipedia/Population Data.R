@@ -15,13 +15,21 @@ population.df <- function(x){ # Get data of countries and their population
     
     if (isTRUE(gsub("[[]", "", m[7 + n * 6]) == m[7 + n * 6])){
       
-      v <- rbind.data.frame(v, data.frame(m[7 + n * 6],
+      d <- m[7 + n * 6]
+      
+      d <- read.fwf(textConnection(d), widths=c(nchar(1),nchar(d)),
+                    colClasses = "character")[2]
+      
+      v <- rbind.data.frame(v, data.frame(d,
                                           as.numeric(gsub(",","",m[11+n*6]))))  
       
     } else if (isFALSE(gsub("[[]", "", m[7 + n * 6]) == m[7 + n * 6])){
       
       d <- read.fwf(textConnection(m[7+n*6]), widths=c(nchar(m[7+n*6])-3,1),
                     colClasses = "character")[,-2]
+      
+      d <- read.fwf(textConnection(d), widths=c(nchar(1),nchar(d)),
+                    colClasses = "character")[2]
       
       w <- rbind.data.frame(w,
                             data.frame(as.data.frame(d),
@@ -34,7 +42,7 @@ population.df <- function(x){ # Get data of countries and their population
   
   df <- rbind(v, w) # Join two data frames
   
-  df[order(-df$Population), ] # Order in a descending way
+  df[order(-df$`Population`), ] # Order in a descending way
   
   rownames(df) <- seq(nrow(df)) # numbers instead of row names
   
