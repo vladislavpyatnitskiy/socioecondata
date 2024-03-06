@@ -15,13 +15,20 @@ life.expectancy.df <- function(x){ # Data Frame of Countries & life expectancy
   
     if (isTRUE(gsub("[[]", "", y[1 + n * 16]) == y[1 + n * 16])){
       
-      v <- rbind.data.frame(v, data.frame(y[1 + n * 16],
+      d <- read.fwf(textConnection(y[1 + n * 16]),
+                    widths=c(nchar(1),nchar(y[1 + n * 16])),
+                    colClasses = "character")[2]
+      
+      v <- rbind.data.frame(v, data.frame(d,
                                           as.numeric(gsub(",","",y[2+n*16]))))  
       
     } else if (isFALSE(gsub("[[]", "", y[1 + n * 16]) == y[1 + n * 16])){
       
       d <- read.fwf(textConnection(y[1+n*16]), widths=c(nchar(y[1+n*16])-3,1),
                     colClasses = "character")[,-2]
+      
+      d <- read.fwf(textConnection(d), widths=c(nchar(1),nchar(d)),
+                    colClasses = "character")[2]
       
       w <- rbind.data.frame(w,
                             data.frame(as.data.frame(d),
