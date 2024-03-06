@@ -16,13 +16,21 @@ gdp.capita.df <- function(x){ # Get countries according to GDP per Capita
     
    if (any(l == y[n])){ if (isTRUE(y[n+1] == "—") && isFALSE(y[n+2] == "—")){
      
-     d <- as.numeric(gsub(",", "", y[n + 2])) # Join data 
+     d <- read.fwf(textConnection(y[n - 1]),
+                   widths=c(nchar(1),nchar(y[n - 1])),
+                   colClasses = "character")[2]
      
-     v <- rbind.data.frame(v, data.frame(y[n - 1], y[n], d))
+     D <- as.numeric(gsub(",", "", y[n + 2])) # Join data 
      
-   } else { d <- as.numeric(gsub(",", "", y[n + 1])) # Join data 
-       
-    v <- rbind.data.frame(v, data.frame(y[n - 1], y[n], d)) } } }
+     v <- rbind.data.frame(v, data.frame(d, y[n], D))
+     
+   } else { d <- read.fwf(textConnection(y[n - 1]),
+                          widths=c(nchar(1),nchar(y[n - 1])),
+                          colClasses = "character")[2]
+     
+     D <- as.numeric(gsub(",", "", y[n + 1])) # Join data 
+     
+     v <- rbind.data.frame(v, data.frame(d, y[n], D)) } } }
   
   colnames(v) <- c("Country", "Region", "GDP per Capita") # Column names
   rownames(v) <- seq(nrow(v)) 
